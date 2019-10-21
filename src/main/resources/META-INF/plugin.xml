@@ -1,0 +1,32 @@
+<idea-plugin>
+    <id>io.github.newhoo.jvm-parameter</id>
+    <name>Jvm Parameter</name>
+    <vendor email="huzunrong@gmail.com" url="https://github.com/newhoo/jvm-parameter-intellij-plugin">Jvm Parameter</vendor>
+
+    <description><![CDATA[
+    <p>manage jvm parameter</p>
+    <br/>
+    <p>jvm参数管理</p>
+
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    -->
+    <depends>com.intellij.modules.java</depends>
+
+    <idea-version since-build="181.0"/>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <projectConfigurable instance="io.github.newhoo.jvm.setting.SettingConfigurable"/>
+
+        <java.programPatcher implementation="io.github.newhoo.jvm.MyJvmPreRunChecks"/>
+    </extensions>
+
+    <actions>
+        <!-- #e16531 -->
+
+    </actions>
+</idea-plugin>
