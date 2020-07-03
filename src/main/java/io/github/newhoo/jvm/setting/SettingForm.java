@@ -98,6 +98,7 @@ public class SettingForm {
         JButton apolloBtn = new JButton("Apollo启动环境");
         apolloBtn.addActionListener(l -> {
             dataModel.addRow(true, "env", "DEV");
+            dataModel.addRow(false, "idc", "default");
         });
         JButton dubboLocalDevBtn = new JButton("dubbo本地开发");
         dubboLocalDevBtn.addActionListener(l -> {

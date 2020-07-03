@@ -33,7 +33,7 @@
             <properties>
               <editable value="false"/>
               <enabled value="true"/>
-              <focusable value="false"/>
+              <focusable value="true"/>
             </properties>
           </component>
         </children>

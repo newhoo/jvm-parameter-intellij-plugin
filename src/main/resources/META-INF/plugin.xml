@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>io.github.newhoo.jvm-parameter</id>
     <name>Jvm Parameter</name>
-    <vendor email="huzunrong@gmail.com" url="https://github.com/newhoo/jvm-parameter-intellij-plugin">Jvm Parameter</vendor>
+    <vendor email="huzunrong@foxmail.com" url="https://github.com/huzunrong/jvm-parameter-intellij-plugin">huzunrong</vendor>
 
     <description><![CDATA[
     <p>manage jvm parameter</p>
@@ -9,6 +9,14 @@
     <p>jvm参数管理</p>
 
     ]]></description>
+
+    <change-notes><![CDATA[
+        1.0.0
+        <ul>
+            <li>new plugin, just use it.</li>
+        </ul>
+      ]]>
+    </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->

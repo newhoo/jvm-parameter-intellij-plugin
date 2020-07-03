@@ -20,9 +20,3 @@ intellij {
     updateSinceUntilBuild false
     sandboxDirectory = "${rootProject.rootDir}/idea-sandbox"
 }
-
-patchPluginXml {
-    changeNotes """
-    <p>new plugin, just use it.</p>
-    """
-}
