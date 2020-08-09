@@ -1,9 +1,6 @@
 package io.github.newhoo.jvm.setting;
 
-import com.intellij.icons.AllIcons.Actions;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.AnActionButton;
 import com.intellij.ui.TableUtil;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.JBTable;
@@ -72,17 +69,6 @@ public class SettingForm {
             EventQueue.invokeLater(() -> {
                 TableUtil.removeSelectedItems(jbTable);
             });
-        });
-        decorationToolbar.addExtraAction(new AnActionButton("clear", Actions.Clean) {
-            @Override
-            public boolean isEnabled() {
-                return dataModel.getRowCount() > 0;
-            }
-
-            @Override
-            public void actionPerformed(AnActionEvent e) {
-                dataModel.clear();
-            }
         });
         decorationLayoutPanel.add(decorationToolbar.createPanel(), BorderLayout.CENTER);
 

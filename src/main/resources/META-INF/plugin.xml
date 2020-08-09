@@ -11,6 +11,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        1.0.1
+        <ul>
+            <li>fix compatibility problems.</li>
+        </ul>
+
         1.0.0
         <ul>
             <li>new plugin, just use it.</li>
