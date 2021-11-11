@@ -1,12 +1,15 @@
 <idea-plugin>
     <id>io.github.newhoo.jvm-parameter</id>
     <name>Jvm Parameter</name>
-    <vendor email="huzunrong@foxmail.com" url="https://github.com/huzunrong/jvm-parameter-intellij-plugin">Jvm Parameter</vendor>
+    <vendor email="huzunrong@foxmail.com" url="https://github.com/huzunrong/jvm-parameter-intellij-plugin">huzunrong</vendor>
 
     <description><![CDATA[
     <p>Manage jvm run parameter for your app conveniently. Enabled jvm parameters will be added to application run option when running.</p>
     <br/>
     <p>方便地管理Jvm运行参数，启动应用时，启用的参数将被添加到应用中。</p>
+
+    For more see <a href="https://github.com/huzunrong/jvm-parameter-intellij-plugin">Document</a>
+    <br/>
 
     <img src="https://raw.githubusercontent.com/huzunrong/jvm-parameter-intellij-plugin/master/images/setting.png" />
     ]]></description>

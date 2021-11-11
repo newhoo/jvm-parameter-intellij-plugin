@@ -1,4 +1,4 @@
-# [jvm-parameter-intellij-plugin](https://plugins.jetbrains.com/plugin/13204-jvm-parameter)
+# jvm-parameter-intellij-plugin
 
 方便地管理Jvm运行参数，启动应用时，启用的参数将被自动设置到jvm启动参数中。
 

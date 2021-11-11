@@ -1,4 +1,4 @@
-# [jvm-parameter-intellij-plugin](https://plugins.jetbrains.com/plugin/13204-jvm-parameter)
+# jvm-parameter-intellij-plugin
 
 [简体中文](./README.zh_CN.md)
 
