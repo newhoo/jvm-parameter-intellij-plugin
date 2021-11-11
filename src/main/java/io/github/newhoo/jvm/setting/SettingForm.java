@@ -1,9 +1,11 @@
 package io.github.newhoo.jvm.setting;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.TableUtil;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.JBTable;
+import io.github.newhoo.jvm.i18n.JvmParameterBundle;
 import io.github.newhoo.jvm.util.AppUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,14 +26,17 @@ import java.util.stream.Stream;
 public class SettingForm {
     public JPanel mainPanel;
 
+    private JPanel addJvmPanel;
+    private JLabel previewLabel;
     private JPanel decorationLayoutPanel;
     public JTextField jvmParameterText;
-    private JPanel jvmParameterGeneratePanel;
+
+    private JPanel generateJvmPanel;
 
     private final Project project;
 
-    private MyJvmTableModel dataModel = new MyJvmTableModel();
-    private TableModelListener tableModelListener = e -> {
+    private final MyJvmTableModel dataModel = new MyJvmTableModel();
+    private final TableModelListener tableModelListener = e -> {
         String jvmParameter = dataModel.list.stream()
                                             .filter(cs -> Objects.equals(true, cs[0]))
                                             .filter(cs -> StringUtils.isNotEmpty(String.valueOf(cs[1])))
@@ -56,20 +61,24 @@ public class SettingForm {
     }
 
     private void init() {
+        previewLabel.setText(JvmParameterBundle.getMessage("label.jvm.parameter.preview"));
+        addJvmPanel.setBorder(IdeBorderFactory.createTitledBorder(JvmParameterBundle.getMessage("label.jvm.parameter.add"), false));
+        generateJvmPanel.setBorder(IdeBorderFactory.createTitledBorder(JvmParameterBundle.getMessage("label.jvm.parameter.generate"), false));
+
         dataModel.addTableModelListener(tableModelListener);
 
         JBTable jbTable = new JBTable(dataModel);
         jbTable.getColumnModel().getColumn(0).setMaxWidth(40);
-        ToolbarDecorator decorationToolbar = ToolbarDecorator.createDecorator(jbTable);
+        ToolbarDecorator decorationToolbar = ToolbarDecorator.createDecorator(jbTable)
+                                                             .setAddAction(button -> {
+                                                                 EventQueue.invokeLater(dataModel::addRow);
+                                                             })
+                                                             .setRemoveAction(button -> {
+                                                                 EventQueue.invokeLater(() -> {
+                                                                     TableUtil.removeSelectedItems(jbTable);
+                                                                 });
+                                                             });
 
-        decorationToolbar.setAddAction(button -> {
-            EventQueue.invokeLater(dataModel::addRow);
-        });
-        decorationToolbar.setRemoveAction(button -> {
-            EventQueue.invokeLater(() -> {
-                TableUtil.removeSelectedItems(jbTable);
-            });
-        });
         decorationLayoutPanel.add(decorationToolbar.createPanel(), BorderLayout.CENTER);
 
         // 生成快捷按钮
@@ -77,30 +86,30 @@ public class SettingForm {
     }
 
     private void generateButton() {
-        JButton jvmMemoryBtn = new JButton("jvm内存设置");
+        JButton jvmMemoryBtn = new JButton(JvmParameterBundle.getMessage("generate.btn.jvmMem"));
         jvmMemoryBtn.addActionListener(l -> {
             dataModel.addRow(true, "-Xms512m -Xmx512m", "");
         });
-        JButton apolloBtn = new JButton("Apollo启动环境");
+        JButton apolloBtn = new JButton(JvmParameterBundle.getMessage("generate.btn.apollo"));
         apolloBtn.addActionListener(l -> {
             dataModel.addRow(true, "env", "DEV");
             dataModel.addRow(false, "idc", "default");
         });
-        JButton dubboLocalDevBtn = new JButton("dubbo本地开发");
+        JButton dubboLocalDevBtn = new JButton(JvmParameterBundle.getMessage("generate.btn.doubleLocal"));
         dubboLocalDevBtn.addActionListener(l -> {
             dataModel.addRow(true, "dubbo.registry.register", "false");
             dataModel.addRow(true, "dubbo.service.group", System.getProperty("user.name"));
         });
-        JButton dubboGroupBtn = new JButton("dubbo服务分组");
+        JButton dubboGroupBtn = new JButton(JvmParameterBundle.getMessage("generate.btn.doubleServiceGroup"));
         dubboGroupBtn.addActionListener(l -> {
             AppUtils.findDubboService(this.project).forEach(s -> {
                 dataModel.addRow(true, "dubbo.service." + s + ".group", System.getProperty("user.name"));
             });
         });
-        jvmParameterGeneratePanel.add(jvmMemoryBtn);
-        jvmParameterGeneratePanel.add(apolloBtn);
-        jvmParameterGeneratePanel.add(dubboLocalDevBtn);
-        jvmParameterGeneratePanel.add(dubboGroupBtn);
+        generateJvmPanel.add(jvmMemoryBtn);
+        generateJvmPanel.add(apolloBtn);
+        generateJvmPanel.add(dubboLocalDevBtn);
+        generateJvmPanel.add(dubboGroupBtn);
     }
 
     public String getJvmParameterTableText() {
