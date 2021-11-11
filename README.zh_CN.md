@@ -25,4 +25,4 @@
 [Issues](https://github.com/huzunrong/jvm-parameter-intellij-plugin/issues) | [Email](mailto:huzunrong@foxmail.com) | [Ratings & Previews](https://plugins.jetbrains.com/plugin/13204-jvm-parameter/reviews)
 
 > 注意  
-> 反馈时请务必附上必要信息：Idea版本、RESTKit插件版本、异常内容、复现方式(如果有)、诉求等。
+> 反馈时请务必附上必要信息：Idea版本、插件版本、异常内容、复现方式(如果有)、诉求等。

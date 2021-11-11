@@ -1,7 +1,5 @@
 package io.github.newhoo.jvm.i18n;
 
-import com.intellij.CommonBundle;
-
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -26,9 +24,5 @@ public class JvmParameterBundle {
 
     public static String getMessage(String key) {
         return resourceBundle.getString(key).trim();
-    }
-
-    public static String message(String key, Object... params) {
-        return CommonBundle.message(resourceBundle, key, params).trim();
     }
 }
