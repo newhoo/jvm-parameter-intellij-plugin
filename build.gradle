@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'io.github.newhoo.jvm'
-version '1.0.2'
+version '1.0.3'
 
 sourceCompatibility = 1.8
 
@@ -17,6 +17,8 @@ dependencies {
 
 intellij {
     version '2018.1.7'
+//    version '2021.1'
     updateSinceUntilBuild false
     sandboxDirectory = "${rootProject.rootDir}/idea-sandbox"
+//    plugins = ['java']
 }

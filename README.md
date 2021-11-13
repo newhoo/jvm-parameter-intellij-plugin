@@ -7,6 +7,10 @@ Manage jvm run parameter for your app conveniently. Enabled jvm parameters will 
 If this plugin helps, please **🌟 Star** and [Rating](https://plugins.jetbrains.com/plugin/13204-jvm-parameter/reviews)! If you have any good idea, please let me know.
 
 
+## Feature
+- Project jvm parameter management.
+- Global jvm parameter management, applied to all opened project.
+
 ## Install
 - **Using IDE plugin system**
 
@@ -21,6 +25,17 @@ After installed this plugin, you can add custom parameter in `Jvm Parameter` set
 
 ![setting](./images/setting.png)
 
+- Preview：preview enabled parameter.
+- Table column description
+
+|Column Name|Description|
+| --- | --- |
+| ENABLE | Whether enable current row |
+| NAME | Parameter key, not empty |
+| VALUE | Parameter value. If empty, current row parameter will be NAME content |
+| GLOBAL | Is global parameter |
+
+- Generate jvm parameter: click `Preview` button to generate common parameter.
 
 ## Contact & Feedback
 [Issues](https://github.com/huzunrong/jvm-parameter-intellij-plugin/issues) | [Email](mailto:huzunrong@foxmail.com) | [Ratings & Previews](https://plugins.jetbrains.com/plugin/13204-jvm-parameter/reviews)

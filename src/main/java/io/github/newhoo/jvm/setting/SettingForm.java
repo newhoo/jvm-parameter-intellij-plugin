@@ -1,7 +1,14 @@
 package io.github.newhoo.jvm.setting;
 
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.IdeBorderFactory;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.ui.TableUtil;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.JBTable;
@@ -9,13 +16,15 @@ import io.github.newhoo.jvm.i18n.JvmParameterBundle;
 import io.github.newhoo.jvm.util.AppUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.TableModelListener;
 import java.awt.*;
-import java.util.Objects;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * SettingForm
@@ -24,35 +33,16 @@ import java.util.stream.Stream;
  * @since 1.0
  */
 public class SettingForm {
+
     public JPanel mainPanel;
 
-    private JPanel addJvmPanel;
     private JLabel previewLabel;
-    private JPanel decorationLayoutPanel;
-    public JTextField jvmParameterText;
-
-    private JPanel generateJvmPanel;
+    private JTextField jvmParameterText;
+    private JPanel decorationPanel;
 
     private final Project project;
 
     private final MyJvmTableModel dataModel = new MyJvmTableModel();
-    private final TableModelListener tableModelListener = e -> {
-        String jvmParameter = dataModel.list.stream()
-                                            .filter(cs -> Objects.equals(true, cs[0]))
-                                            .filter(cs -> StringUtils.isNotEmpty(String.valueOf(cs[1])))
-                                            .map(cs -> {
-                                                String c2 = String.valueOf(cs[2]);
-                                                if (StringUtils.isEmpty(c2)) {
-                                                    return String.valueOf(cs[1]);
-                                                }
-                                                return !StringUtils.containsWhitespace(c2)
-                                                        ? "-D" + cs[1] + "=" + c2
-                                                        : "\"-D" + cs[1] + "=" + c2 + "\"";
-                                            })
-                                            .collect(Collectors.joining(" "));
-        jvmParameterText.setText(jvmParameter);
-        jvmParameterText.setToolTipText(jvmParameter);
-    };
 
     public SettingForm(Project project) {
         this.project = project;
@@ -61,14 +51,27 @@ public class SettingForm {
     }
 
     private void init() {
-        previewLabel.setText(JvmParameterBundle.getMessage("label.jvm.parameter.preview"));
-        addJvmPanel.setBorder(IdeBorderFactory.createTitledBorder(JvmParameterBundle.getMessage("label.jvm.parameter.add"), false));
-        generateJvmPanel.setBorder(IdeBorderFactory.createTitledBorder(JvmParameterBundle.getMessage("label.jvm.parameter.generate"), false));
+        dataModel.addTableModelListener(e -> {
+            List<String> list = dataModel.list.stream()
+                                              .map(JvmParameter::toRunParameter)
+                                              .filter(StringUtils::isNotEmpty)
+                                              .collect(Collectors.toList());
+            jvmParameterText.setText(String.join(" ", list));
+            jvmParameterText.setToolTipText(String.join("<br/>", list));
+        });
 
-        dataModel.addTableModelListener(tableModelListener);
+        previewLabel.setText(JvmParameterBundle.getMessage("label.jvm.parameter.preview"));
+        previewLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // 生成快捷按钮
+                generateButton(e);
+            }
+        });
 
         JBTable jbTable = new JBTable(dataModel);
-        jbTable.getColumnModel().getColumn(0).setMaxWidth(40);
+        jbTable.getColumnModel().getColumn(0).setMaxWidth(60);
+        jbTable.getColumnModel().getColumn(3).setMaxWidth(60);
         ToolbarDecorator decorationToolbar = ToolbarDecorator.createDecorator(jbTable)
                                                              .setAddAction(button -> {
                                                                  EventQueue.invokeLater(dataModel::addRow);
@@ -78,57 +81,87 @@ public class SettingForm {
                                                                      TableUtil.removeSelectedItems(jbTable);
                                                                  });
                                                              });
-
-        decorationLayoutPanel.add(decorationToolbar.createPanel(), BorderLayout.CENTER);
-
-        // 生成快捷按钮
-        generateButton();
+        decorationPanel.add(decorationToolbar.createPanel(), BorderLayout.CENTER);
     }
 
-    private void generateButton() {
-        JButton jvmMemoryBtn = new JButton(JvmParameterBundle.getMessage("generate.btn.jvmMem"));
-        jvmMemoryBtn.addActionListener(l -> {
-            dataModel.addRow(true, "-Xms512m -Xmx512m", "");
-        });
-        JButton apolloBtn = new JButton(JvmParameterBundle.getMessage("generate.btn.apollo"));
-        apolloBtn.addActionListener(l -> {
-            dataModel.addRow(true, "env", "DEV");
-            dataModel.addRow(false, "idc", "default");
-        });
-        JButton dubboLocalDevBtn = new JButton(JvmParameterBundle.getMessage("generate.btn.doubleLocal"));
-        dubboLocalDevBtn.addActionListener(l -> {
-            dataModel.addRow(true, "dubbo.registry.register", "false");
-            dataModel.addRow(true, "dubbo.service.group", System.getProperty("user.name"));
-        });
-        JButton dubboGroupBtn = new JButton(JvmParameterBundle.getMessage("generate.btn.doubleServiceGroup"));
-        dubboGroupBtn.addActionListener(l -> {
-            AppUtils.findDubboService(this.project).forEach(s -> {
-                dataModel.addRow(true, "dubbo.service." + s + ".group", System.getProperty("user.name"));
-            });
-        });
-        generateJvmPanel.add(jvmMemoryBtn);
-        generateJvmPanel.add(apolloBtn);
-        generateJvmPanel.add(dubboLocalDevBtn);
-        generateJvmPanel.add(dubboGroupBtn);
+    private void generateButton(MouseEvent e) {
+        DefaultActionGroup generateActionGroup = new DefaultActionGroup(
+                new AnAction(JvmParameterBundle.getMessage("generate.btn.jvmMem")) {
+                    @Override
+                    public void actionPerformed(@NotNull AnActionEvent e) {
+                        dataModel.addRow(true, "-Xms512m -Xmx512m", "");
+                    }
+                },
+                new AnAction(JvmParameterBundle.getMessage("generate.btn.apollo")) {
+                    @Override
+                    public void actionPerformed(@NotNull AnActionEvent e) {
+                        dataModel.addRow(true, "env", "DEV");
+                        dataModel.addRow(false, "idc", "default");
+                    }
+                },
+                new AnAction(JvmParameterBundle.getMessage("generate.btn.doubleLocal")) {
+                    @Override
+                    public void actionPerformed(@NotNull AnActionEvent e) {
+                        dataModel.addRow(true, "dubbo.registry.register", "false");
+                        dataModel.addRow(true, "dubbo.service.group", System.getProperty("user.name"));
+                    }
+                },
+                new AnAction(JvmParameterBundle.getMessage("generate.btn.doubleServiceGroup")) {
+                    @Override
+                    public void actionPerformed(@NotNull AnActionEvent e) {
+                        ApplicationManager.getApplication().runReadAction(() -> {
+                            AppUtils.findDubboService(project).forEach(s -> {
+                                dataModel.addRow(true, "dubbo.service." + s + ".group", System.getProperty("user.name"));
+                            });
+                        });
+                    }
+                }
+        );
+
+        DataContext dataContext = DataManager.getInstance().getDataContext(e.getComponent());
+        final ListPopup popup = JBPopupFactory.getInstance()
+                                              .createActionGroupPopup(
+                                                      JvmParameterBundle.getMessage("label.jvm.parameter.generate"),
+                                                      generateActionGroup,
+                                                      dataContext,
+                                                      JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                                                      true);
+        popup.showInBestPositionFor(dataContext);
     }
 
-    public String getJvmParameterTableText() {
-        return dataModel.list.stream()
-                             .flatMap(objects -> Stream.of(objects)
-                                                       .map(o -> StringUtils.isEmpty(o.toString()) ? " " : o.toString()))
-                             .collect(Collectors.joining("@@@"));
+    public Pair<JvmParameterSetting, GlobalJvmParameterSetting> getModifiedSetting() {
+        JvmParameterSetting jvmParameterSetting = new JvmParameterSetting();
+        GlobalJvmParameterSetting globalJvmParameterSetting = new GlobalJvmParameterSetting();
+        saveTo(jvmParameterSetting, globalJvmParameterSetting);
+        return Pair.of(jvmParameterSetting, globalJvmParameterSetting);
     }
 
-    public void setJvmParameterTableText(String jvmParameterTableText) {
-        String[] split = StringUtils.split(jvmParameterTableText, "@@@");
-        if (split == null || split.length % 3 != 0) {
-            return;
-        }
+    public void saveTo(JvmParameterSetting jvmParameterSetting, GlobalJvmParameterSetting globalJvmParameterSetting) {
+        List<JvmParameter> globalParameter = dataModel.list.stream()
+                                                           .filter(jvmParameter -> jvmParameter.getGlobal())
+                                                           .collect(Collectors.toList());
+        globalJvmParameterSetting.setJvmParameterList(globalParameter);
+        List<JvmParameter> parameter = dataModel.list.stream()
+                                                     .filter(jvmParameter -> !jvmParameter.getGlobal())
+                                                     .collect(Collectors.toList());
+        jvmParameterSetting.setJvmParameterList(parameter);
+    }
 
+    public void reset(JvmParameterSetting jvmParameterSetting, GlobalJvmParameterSetting globalJvmParameterSetting) {
         dataModel.clear();
-        for (int i = 0; i < split.length; i = i + 3) {
-            dataModel.addRow(BooleanUtils.toBoolean(split[i]), StringUtils.trimToEmpty(split[i + 1]),
-                    StringUtils.trimToEmpty(split[i + 2]));
+
+        List<JvmParameter> globalJvmParameterList = globalJvmParameterSetting.getJvmParameterList();
+        List<JvmParameter> jvmParameterList = jvmParameterSetting.getJvmParameterList();
+
+        for (JvmParameter jvmParameter : globalJvmParameterList) {
+            dataModel.addRow(BooleanUtils.toBooleanDefaultIfNull(jvmParameter.getEnabled(), false),
+                    jvmParameter.getName(), jvmParameter.getValue(),
+                    BooleanUtils.toBooleanDefaultIfNull(jvmParameter.getGlobal(), false));
+        }
+        for (JvmParameter jvmParameter : jvmParameterList) {
+            dataModel.addRow(BooleanUtils.toBooleanDefaultIfNull(jvmParameter.getEnabled(), false),
+                    jvmParameter.getName(), jvmParameter.getValue(),
+                    BooleanUtils.toBooleanDefaultIfNull(jvmParameter.getGlobal(), false));
         }
     }
 }

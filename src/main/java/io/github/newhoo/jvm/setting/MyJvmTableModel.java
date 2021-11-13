@@ -14,11 +14,11 @@ import java.util.List;
  */
 public class MyJvmTableModel extends AbstractTableModel implements EditableModel {
 
-    List<Object[]> list = new ArrayList<>();
+    List<JvmParameter> list = new ArrayList<>();
 
-    private String[] head = {"", "NAME", "VALUE"};
+    private final String[] head = {"ENABLE", "NAME", "VALUE", "GLOBAL"};
 
-    private Class[] typeArray = {Boolean.class, Object.class, Object.class};
+    private final Class<?>[] typeArray = {Boolean.class, String.class, String.class, Boolean.class};
 
     @Override
     public int getRowCount() {
@@ -37,12 +37,40 @@ public class MyJvmTableModel extends AbstractTableModel implements EditableModel
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return list.get(rowIndex)[columnIndex];
+        JvmParameter jvmParameter = list.get(rowIndex);
+        switch (columnIndex) {
+            case 0:
+                return jvmParameter.getEnabled();
+            case 1:
+                return jvmParameter.getName();
+            case 2:
+                return jvmParameter.getValue();
+            case 3:
+                return jvmParameter.getGlobal();
+            default:
+        }
+        return null;
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        list.get(rowIndex)[columnIndex] = aValue;
+//        list.get(rowIndex)[columnIndex] = aValue;
+        JvmParameter jvmParameter = list.get(rowIndex);
+        switch (columnIndex) {
+            case 0:
+                jvmParameter.setEnabled((Boolean) aValue);
+                break;
+            case 1:
+                jvmParameter.setName((String) aValue);
+                break;
+            case 2:
+                jvmParameter.setValue((String) aValue);
+                break;
+            case 3:
+                jvmParameter.setGlobal((Boolean) aValue);
+                break;
+            default:
+        }
         fireTableCellUpdated(rowIndex, columnIndex);
     }
 
@@ -57,7 +85,12 @@ public class MyJvmTableModel extends AbstractTableModel implements EditableModel
     }
 
     public void addRow(boolean enable, String name, String value) {
-        list.add(new Object[]{enable, name, value});
+        addRow(enable, name, value, false);
+    }
+
+    public void addRow(boolean enable, String name, String value, boolean isGlobal) {
+//        list.add(new Object[]{enable, name, value, isGlobal});
+        list.add(new JvmParameter(enable, name, value, isGlobal));
         fireTableRowsInserted(getRowCount() - 1, getRowCount());
     }
 
@@ -68,15 +101,21 @@ public class MyJvmTableModel extends AbstractTableModel implements EditableModel
 
     @Override
     public void addRow() {
-        list.add(new Object[]{true, "", ""});
+//        list.add(new Object[]{true, "", "", false});
+        list.add(new JvmParameter(true, "", "", false));
         fireTableRowsInserted(getRowCount() - 1, getRowCount());
     }
 
     @Override
     public void exchangeRows(int oldIndex, int newIndex) {
-        Object[] objects = list.get(oldIndex);
+//        Object[] objects = list.get(oldIndex);
+//        list.set(oldIndex, list.get(newIndex));
+//        list.set(newIndex, objects);
+
+        JvmParameter jvmParameter1 = list.get(oldIndex);
         list.set(oldIndex, list.get(newIndex));
-        list.set(newIndex, objects);
+        list.set(newIndex, jvmParameter1);
+
         fireTableDataChanged();
     }
 

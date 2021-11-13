@@ -11,15 +11,21 @@
     For more see <a href="https://github.com/huzunrong/jvm-parameter-intellij-plugin">Document</a>
     <br/>
 
-    <img src="https://raw.githubusercontent.com/huzunrong/jvm-parameter-intellij-plugin/master/images/setting.png" />
+    <img src="https://raw.githubusercontent.com/huzunrong/jvm-parameter-intellij-plugin/master/images/plugin.png" />
     ]]></description>
 
     <change-notes><![CDATA[
+        1.0.3
+        <ul>
+            <li>support setting global parameter.</li>
+        </ul>
+
         1.0.2
         <ul>
             <li>support i18n.</li>
             <li>optimize ui.</li>
         </ul>
+
         1.0.1
         <ul>
             <li>fix compatibility problems.</li>
@@ -42,7 +48,11 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <applicationService serviceImplementation="io.github.newhoo.jvm.setting.GlobalJvmParameterSetting"/>
+        <projectService serviceImplementation="io.github.newhoo.jvm.setting.JvmParameterSetting"/>
         <projectConfigurable instance="io.github.newhoo.jvm.setting.SettingConfigurable"/>
+
+        <postStartupActivity implementation="io.github.newhoo.jvm.MyStartupActivity"/>
 
         <java.programPatcher implementation="io.github.newhoo.jvm.MyJvmPreRunChecks"/>
     </extensions>

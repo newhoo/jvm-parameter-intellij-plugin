@@ -2,7 +2,7 @@ package io.github.newhoo.jvm.setting;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nls.Capitalization;
 import org.jetbrains.annotations.Nullable;
@@ -17,11 +17,13 @@ import javax.swing.*;
  */
 public class SettingConfigurable implements Configurable {
 
-    private final PluginProjectSetting projectSetting;
+    private final JvmParameterSetting jvmParameterSetting;
+    private final GlobalJvmParameterSetting globalJvmParameterSetting;
     private final SettingForm settingForm;
 
     public SettingConfigurable(Project project) {
-        this.projectSetting = new PluginProjectSetting(project);
+        this.jvmParameterSetting = JvmParameterSetting.getInstance(project);
+        this.globalJvmParameterSetting = GlobalJvmParameterSetting.getInstance();
         this.settingForm = new SettingForm(project);
     }
 
@@ -34,24 +36,23 @@ public class SettingConfigurable implements Configurable {
     @Nullable
     @Override
     public JComponent createComponent() {
-        reset();
-
         return settingForm.mainPanel;
     }
 
     @Override
     public boolean isModified() {
-        return !StringUtils.equals(projectSetting.getJvmParameterList(), settingForm.getJvmParameterTableText());
+        Pair<JvmParameterSetting, GlobalJvmParameterSetting> modifiedSetting = settingForm.getModifiedSetting();
+        return jvmParameterSetting.isModified(modifiedSetting.getLeft())
+                || globalJvmParameterSetting.isModified(modifiedSetting.getRight());
     }
 
     @Override
     public void apply() {
-        projectSetting.setJvmParameter(settingForm.jvmParameterText.getText());
-        projectSetting.setJvmParameterList(settingForm.getJvmParameterTableText());
+        settingForm.saveTo(jvmParameterSetting, globalJvmParameterSetting);
     }
 
     @Override
     public void reset() {
-        settingForm.setJvmParameterTableText(projectSetting.getJvmParameterList());
+        settingForm.reset(jvmParameterSetting, globalJvmParameterSetting);
     }
 }
