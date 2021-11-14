@@ -15,7 +15,7 @@
 
 - **本地安装**
 
-从仓库下载<kbd>distributions/RESTKit-JAX-RS-x.x.x.zip</kbd>, 然后在本地Idea安装 <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Install Plugin from Disk...</kbd>
+从仓库下载<kbd>distributions/jvm-parameter-intellij-plugin-x.x.x.zip</kbd>, 然后在本地Idea安装 <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Install Plugin from Disk...</kbd>
 
 
 ## 使用
@@ -34,7 +34,7 @@
 |VALUE|参数value，为空时，生成的内容为NAME内容|
 |GLOBAL|是否为全局参数|
 
-- 快速生成jvm参数：点击`预览`按钮生成常用的参数
+- 快速生成jvm参数：点击`预览`标签生成常用的参数
 
 ## 联系 & 反馈
 

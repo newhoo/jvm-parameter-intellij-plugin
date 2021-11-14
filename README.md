@@ -35,7 +35,7 @@ After installed this plugin, you can add custom parameter in `Jvm Parameter` set
 | VALUE | Parameter value. If empty, current row parameter will be NAME content |
 | GLOBAL | Is global parameter |
 
-- Generate jvm parameter: click `Preview` button to generate common parameter.
+- Generate jvm parameter: click `Preview` label to generate common parameter.
 
 ## Contact & Feedback
 [Issues](https://github.com/huzunrong/jvm-parameter-intellij-plugin/issues) | [Email](mailto:huzunrong@foxmail.com) | [Ratings & Previews](https://plugins.jetbrains.com/plugin/13204-jvm-parameter/reviews)
