@@ -15,6 +15,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        1.0.4
+        <ul>
+            <li>fix bugs.</li>
+        </ul>
+
         1.0.3
         <ul>
             <li>support setting global parameter.</li>
@@ -48,8 +53,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <applicationService serviceImplementation="io.github.newhoo.jvm.setting.GlobalJvmParameterSetting"/>
-        <projectService serviceImplementation="io.github.newhoo.jvm.setting.JvmParameterSetting"/>
+        <applicationService serviceImplementation="io.github.newhoo.jvm.setting.GlobalSetting"/>
+        <projectService serviceImplementation="io.github.newhoo.jvm.setting.ProjectSetting"/>
         <projectConfigurable instance="io.github.newhoo.jvm.setting.SettingConfigurable"/>
 
         <postStartupActivity implementation="io.github.newhoo.jvm.MyStartupActivity"/>
@@ -59,6 +64,8 @@
 
     <actions>
         <!-- #e16531 -->
-
+        <action id="io.github.newhoo.jvm.setting.SettingAction" class="io.github.newhoo.jvm.setting.SettingAction" text="Jvm Parameter">
+            <add-to-group group-id="ToolsMenu"/>
+        </action>
     </actions>
 </idea-plugin>

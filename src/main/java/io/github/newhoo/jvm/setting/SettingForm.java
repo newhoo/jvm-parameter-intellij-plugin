@@ -70,8 +70,8 @@ public class SettingForm {
         });
 
         JBTable jbTable = new JBTable(dataModel);
-        jbTable.getColumnModel().getColumn(0).setMaxWidth(60);
-        jbTable.getColumnModel().getColumn(3).setMaxWidth(60);
+        jbTable.getColumnModel().getColumn(0).setMaxWidth(64);
+        jbTable.getColumnModel().getColumn(3).setMaxWidth(64);
         ToolbarDecorator decorationToolbar = ToolbarDecorator.createDecorator(jbTable)
                                                              .setAddAction(button -> {
                                                                  EventQueue.invokeLater(dataModel::addRow);
@@ -129,14 +129,14 @@ public class SettingForm {
         popup.showInBestPositionFor(dataContext);
     }
 
-    public Pair<JvmParameterSetting, GlobalJvmParameterSetting> getModifiedSetting() {
-        JvmParameterSetting jvmParameterSetting = new JvmParameterSetting();
-        GlobalJvmParameterSetting globalJvmParameterSetting = new GlobalJvmParameterSetting();
-        saveTo(jvmParameterSetting, globalJvmParameterSetting);
-        return Pair.of(jvmParameterSetting, globalJvmParameterSetting);
+    public Pair<JvmParameterSetting, JvmParameterSetting> getModifiedSetting() {
+        JvmParameterSetting globalJvmParameterSetting = new JvmParameterSetting();
+        JvmParameterSetting projectJvmParameterSetting = new JvmParameterSetting();
+        saveTo(globalJvmParameterSetting, projectJvmParameterSetting);
+        return Pair.of(globalJvmParameterSetting, projectJvmParameterSetting);
     }
 
-    public void saveTo(JvmParameterSetting jvmParameterSetting, GlobalJvmParameterSetting globalJvmParameterSetting) {
+    public void saveTo(JvmParameterSetting globalJvmParameterSetting, JvmParameterSetting projectJvmParameterSetting) {
         List<JvmParameter> globalParameter = dataModel.list.stream()
                                                            .filter(jvmParameter -> jvmParameter.getGlobal())
                                                            .collect(Collectors.toList());
@@ -144,21 +144,18 @@ public class SettingForm {
         List<JvmParameter> parameter = dataModel.list.stream()
                                                      .filter(jvmParameter -> !jvmParameter.getGlobal())
                                                      .collect(Collectors.toList());
-        jvmParameterSetting.setJvmParameterList(parameter);
+        projectJvmParameterSetting.setJvmParameterList(parameter);
     }
 
-    public void reset(JvmParameterSetting jvmParameterSetting, GlobalJvmParameterSetting globalJvmParameterSetting) {
+    public void reset(JvmParameterSetting globalJvmParameterSetting, JvmParameterSetting projectJvmParameterSetting) {
         dataModel.clear();
 
-        List<JvmParameter> globalJvmParameterList = globalJvmParameterSetting.getJvmParameterList();
-        List<JvmParameter> jvmParameterList = jvmParameterSetting.getJvmParameterList();
-
-        for (JvmParameter jvmParameter : globalJvmParameterList) {
+        for (JvmParameter jvmParameter : globalJvmParameterSetting.getJvmParameterList()) {
             dataModel.addRow(BooleanUtils.toBooleanDefaultIfNull(jvmParameter.getEnabled(), false),
                     jvmParameter.getName(), jvmParameter.getValue(),
                     BooleanUtils.toBooleanDefaultIfNull(jvmParameter.getGlobal(), false));
         }
-        for (JvmParameter jvmParameter : jvmParameterList) {
+        for (JvmParameter jvmParameter : projectJvmParameterSetting.getJvmParameterList()) {
             dataModel.addRow(BooleanUtils.toBooleanDefaultIfNull(jvmParameter.getEnabled(), false),
                     jvmParameter.getName(), jvmParameter.getValue(),
                     BooleanUtils.toBooleanDefaultIfNull(jvmParameter.getGlobal(), false));

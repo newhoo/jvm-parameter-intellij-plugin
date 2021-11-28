@@ -4,7 +4,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import io.github.newhoo.jvm.setting.JvmParameter;
-import io.github.newhoo.jvm.setting.JvmParameterSetting;
+import io.github.newhoo.jvm.setting.ProjectSetting;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +43,7 @@ public class MyStartupActivity implements StartupActivity {
             }
         }
         if (!oldJvmParameterList.isEmpty()) {
-            List<JvmParameter> jvmParameterList = JvmParameterSetting.getInstance(project).getJvmParameterList();
+            List<JvmParameter> jvmParameterList = ProjectSetting.getInstance(project).getState().getJvmParameterList();
             if (jvmParameterList.isEmpty()) {
                 jvmParameterList.addAll(oldJvmParameterList);
             }

@@ -17,13 +17,13 @@ import javax.swing.*;
  */
 public class SettingConfigurable implements Configurable {
 
-    private final JvmParameterSetting jvmParameterSetting;
-    private final GlobalJvmParameterSetting globalJvmParameterSetting;
+    private final ProjectSetting projectSetting;
+    private final GlobalSetting globalSetting;
     private final SettingForm settingForm;
 
     public SettingConfigurable(Project project) {
-        this.jvmParameterSetting = JvmParameterSetting.getInstance(project);
-        this.globalJvmParameterSetting = GlobalJvmParameterSetting.getInstance();
+        this.projectSetting = ProjectSetting.getInstance(project);
+        this.globalSetting = GlobalSetting.getInstance();
         this.settingForm = new SettingForm(project);
     }
 
@@ -41,18 +41,18 @@ public class SettingConfigurable implements Configurable {
 
     @Override
     public boolean isModified() {
-        Pair<JvmParameterSetting, GlobalJvmParameterSetting> modifiedSetting = settingForm.getModifiedSetting();
-        return jvmParameterSetting.isModified(modifiedSetting.getLeft())
-                || globalJvmParameterSetting.isModified(modifiedSetting.getRight());
+        Pair<JvmParameterSetting, JvmParameterSetting> modifiedSetting = settingForm.getModifiedSetting();
+        return globalSetting.isModified(modifiedSetting.getLeft())
+                || projectSetting.isModified(modifiedSetting.getRight());
     }
 
     @Override
     public void apply() {
-        settingForm.saveTo(jvmParameterSetting, globalJvmParameterSetting);
+        settingForm.saveTo(globalSetting.getState(), projectSetting.getState());
     }
 
     @Override
     public void reset() {
-        settingForm.reset(jvmParameterSetting, globalJvmParameterSetting);
+        settingForm.reset(globalSetting.getState(), projectSetting.getState());
     }
 }
