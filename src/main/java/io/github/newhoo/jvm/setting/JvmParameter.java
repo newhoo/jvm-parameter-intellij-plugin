@@ -69,6 +69,16 @@ public class JvmParameter {
         return "";
     }
 
+    public String toRunParameter2() {
+        if (BooleanUtils.isTrue(enabled) && StringUtils.isNotEmpty(String.valueOf(name))) {
+            if (StringUtils.isEmpty(value)) {
+                return "\"" + name + "\"";
+            }
+            return "\"-D" + name + "=" + value + "\"";
+        }
+        return "";
+    }
+
     public String toCompareString() {
         return enabled + StringUtils.defaultString(name) + StringUtils.defaultString(value) + isGlobal;
     }

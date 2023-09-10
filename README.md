@@ -16,16 +16,12 @@ If this plugin helps, please **🌟 Star** and [Rating](https://plugins.jetbrain
 
 Recommended <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>find "Jvm Parameter"</kbd> > <kbd>Install Plugin</kbd>
 
-- **Local Install**
-
-Download plugin form <kbd>distributions/jvm-parameter-intellij-plugin-x.x.x.zip</kbd>, then <kbd>Preferences(Settings)</kbd> > <kbd>Plugins</kbd> > <kbd>Install Plugin from Disk...</kbd>
-
 ## Usage
 After installed this plugin, you can add custom parameter in `Jvm Parameter` setting.
 
 ![setting](./images/setting.png)
 
-- Preview：preview enabled parameter.
+- Preview：preview enabled parameter (see multirow format when hover).
 - Table column description
 
 |Column Name|Description|
@@ -38,7 +34,12 @@ After installed this plugin, you can add custom parameter in `Jvm Parameter` set
 - Generate jvm parameter: click `Preview` label to generate common parameter.
 
 ## Contact & Feedback
-[Issues](https://github.com/huzunrong/jvm-parameter-intellij-plugin/issues) | [Email](mailto:huzunrong@foxmail.com) | [Ratings & Previews](https://plugins.jetbrains.com/plugin/13204-jvm-parameter/reviews)
+[Issues](https://github.com/newhoo/jvm-parameter-intellij-plugin/issues) | [Email](mailto:huzunrong@foxmail.com) | [Ratings & Previews](https://plugins.jetbrains.com/plugin/13204-jvm-parameter/reviews)
 
 > Note  
 > Please provide necessary information when you feedback: IDEA version, plugin version, exception content, recreation way(if can), desire, and etc.
+
+## Sponsor
+You can take me a cup of coffee as you want. Thanks!
+
+![](images/pay.png)

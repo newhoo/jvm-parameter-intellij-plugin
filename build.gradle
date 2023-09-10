@@ -1,14 +1,26 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
 plugins {
-    id 'java'
-    id 'org.jetbrains.intellij' version '0.4.10'
+    id("java")
+    id('org.jetbrains.intellij') version '1.10.1'
 }
 
 group 'io.github.newhoo.jvm'
-version '1.0.4'
+version '1.0.5'
 
-sourceCompatibility = 1.8
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+}
 
 repositories {
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    mavenLocal()
     mavenCentral()
 }
 
@@ -16,9 +28,8 @@ dependencies {
 }
 
 intellij {
-    version '2018.1.7'
-//    version '2021.1'
-    updateSinceUntilBuild false
-    sandboxDirectory = "${rootProject.rootDir}/idea-sandbox"
-//    plugins = ['java']
+    version.set('2018.1.7')
+    updateSinceUntilBuild.set(false)
+    downloadSources.set(true)
+    sandboxDir.set("${rootProject.rootDir}/idea-sandbox")
 }

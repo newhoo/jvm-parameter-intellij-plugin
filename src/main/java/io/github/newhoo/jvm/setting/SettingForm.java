@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -68,10 +70,20 @@ public class SettingForm {
                 generateButton(e);
             }
         });
+        jvmParameterText.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    generateButton2(e);
+                }
+            }
+        });
 
         JBTable jbTable = new JBTable(dataModel);
-        jbTable.getColumnModel().getColumn(0).setMaxWidth(64);
-        jbTable.getColumnModel().getColumn(3).setMaxWidth(64);
+        jbTable.getColumnModel().getColumn(0).setMaxWidth(100);
+        jbTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+        jbTable.getColumnModel().getColumn(3).setMaxWidth(100);
+        jbTable.getColumnModel().getColumn(3).setPreferredWidth(100);
         ToolbarDecorator decorationToolbar = ToolbarDecorator.createDecorator(jbTable)
                                                              .setAddAction(button -> {
                                                                  EventQueue.invokeLater(dataModel::addRow);
@@ -122,6 +134,56 @@ public class SettingForm {
         final ListPopup popup = JBPopupFactory.getInstance()
                                               .createActionGroupPopup(
                                                       JvmParameterBundle.getMessage("label.jvm.parameter.generate"),
+                                                      generateActionGroup,
+                                                      dataContext,
+                                                      JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                                                      true);
+        popup.showInBestPositionFor(dataContext);
+    }
+
+    private void generateButton2(MouseEvent e) {
+        DefaultActionGroup generateActionGroup = new DefaultActionGroup(
+                new AnAction("Copy as line string") {
+                    @Override
+                    public void actionPerformed(@NotNull AnActionEvent e) {
+                        String text = jvmParameterText.getText();
+                        if (StringUtils.isNotEmpty(text)) {
+                            String s = text.replace("\\", "\\\\");
+                            CopyPasteManager.getInstance().setContents(new StringSelection(s));
+                        }
+                    }
+                },
+                new AnAction("Copy as multiline string") {
+                    @Override
+                    public void actionPerformed(@NotNull AnActionEvent e) {
+                        String s = dataModel.list.stream()
+                                                 .map(JvmParameter::toRunParameter)
+                                                 .filter(StringUtils::isNotEmpty)
+                                                 .collect(Collectors.joining("\n"));
+                        if (StringUtils.isNotEmpty(s)) {
+                            s = s.replace("\\", "\\\\");
+                            CopyPasteManager.getInstance().setContents(new StringSelection(s));
+                        }
+                    }
+                },
+                new AnAction("Copy as string array") {
+                    @Override
+                    public void actionPerformed(@NotNull AnActionEvent e) {
+                        String s = dataModel.list.stream()
+                                                 .map(JvmParameter::toRunParameter2)
+                                                 .filter(StringUtils::isNotEmpty)
+                                                 .collect(Collectors.joining(",\n    "));
+                        if (StringUtils.isNotEmpty(s)) {
+                            s = s.replace("\\", "\\\\");
+                            CopyPasteManager.getInstance().setContents(new StringSelection("[\n    " + s + "\n]"));
+                        }
+                    }
+                }
+        );
+        DataContext dataContext = DataManager.getInstance().getDataContext(jvmParameterText);
+        final ListPopup popup = JBPopupFactory.getInstance()
+                                              .createActionGroupPopup(
+                                                      null,
                                                       generateActionGroup,
                                                       dataContext,
                                                       JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
