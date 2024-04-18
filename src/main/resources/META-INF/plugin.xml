@@ -15,6 +15,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        1.0.6
+        <ul>
+            <li>fix exception in 2024.1</li>
+        </ul>
+
         1.0.5
         <ul>
             <li>update ui.</li>
@@ -55,13 +60,14 @@
     -->
     <depends>com.intellij.modules.java</depends>
 
-    <idea-version since-build="181.0"/>
+<!--    <idea-version since-build="181.0"/>-->
+    <idea-version since-build="233.6"/>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <applicationService serviceImplementation="io.github.newhoo.jvm.setting.GlobalSetting"/>
         <projectService serviceImplementation="io.github.newhoo.jvm.setting.ProjectSetting"/>
-        <projectConfigurable instance="io.github.newhoo.jvm.setting.SettingConfigurable"/>
+        <projectConfigurable instance="io.github.newhoo.jvm.setting.SettingConfigurable" displayName="Jvm Parameter"/>
 
         <postStartupActivity implementation="io.github.newhoo.jvm.MyStartupActivity"/>
 

@@ -2,12 +2,15 @@ package io.github.newhoo.jvm;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import com.intellij.openapi.startup.ProjectActivity;
 import io.github.newhoo.jvm.setting.JvmParameter;
 import io.github.newhoo.jvm.setting.ProjectSetting;
+import kotlin.Unit;
+import kotlin.coroutines.Continuation;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +20,17 @@ import java.util.List;
  *
  * @since 1.0.3
  */
-public class MyStartupActivity implements StartupActivity {
+public class MyStartupActivity implements ProjectActivity {
 
     private static final String KEY_JMV_PARAMETER_LIST = "jvm-parameter.jvmParameterList";
 
+    @Nullable
     @Override
-    public void runActivity(@NotNull Project project) {
+    public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
         PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(project);
         String jvmParameterTableText = propertiesComponent.getValue(KEY_JMV_PARAMETER_LIST);
         if (StringUtils.isEmpty(jvmParameterTableText)) {
-            return;
+            return null;
         }
         propertiesComponent.unsetValue(KEY_JMV_PARAMETER_LIST);
 
@@ -48,5 +52,6 @@ public class MyStartupActivity implements StartupActivity {
                 jvmParameterList.addAll(oldJvmParameterList);
             }
         }
+        return null;
     }
 }

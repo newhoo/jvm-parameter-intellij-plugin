@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public final class AppUtils {
 
     public static Set<String> findDubboService(Project project) {
-        Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get("Service", project, GlobalSearchScope.projectScope(project));
+        Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().getAnnotations("Service", project, GlobalSearchScope.projectScope(project));
         return psiAnnotations.stream()
                              .filter(psiAnnotation -> "com.alibaba.dubbo.config.annotation.Service".equals(psiAnnotation.getQualifiedName()))
                              .map(psiAnnotation -> {

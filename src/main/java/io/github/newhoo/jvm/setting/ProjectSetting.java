@@ -1,7 +1,6 @@
 package io.github.newhoo.jvm.setting;
 
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
@@ -20,8 +19,8 @@ import java.util.Objects;
 public class ProjectSetting implements PersistentStateComponent<JvmParameterSetting> {
 
     public static ProjectSetting getInstance(Project project) {
-        // project.getService(serviceClass)
-        return ServiceManager.getService(project, ProjectSetting.class);
+        return project.getService(ProjectSetting.class);
+//        return ServiceManager.getService(project, ProjectSetting.class);
     }
 
     private final JvmParameterSetting jvmParameterSetting = new JvmParameterSetting();
