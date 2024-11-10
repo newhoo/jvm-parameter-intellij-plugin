@@ -4,9 +4,9 @@
     <vendor email="huzunrong@foxmail.com" url="https://github.com/newhoo/jvm-parameter-intellij-plugin">huzunrong</vendor>
 
     <description><![CDATA[
-    <p>Manage jvm run parameter for your app conveniently. Enabled jvm parameters will be added to application run option when running.</p>
+    <p>Manage jvm run parameter for your app conveniently. Enabled jvm parameters will be added to application run option when running. It's recommended to migrate data to RestfulBox, which also supports running environment variables and jvm parameter management.</p>
     <br/>
-    <p>方便地管理Jvm运行参数，启动应用时，启用的参数将被添加到应用中。</p>
+    <p>方便地管理Jvm运行参数，启动应用时，启用的参数将被添加到应用中。推荐迁移到 RestfulBox，同时支持运行环境变量和jvm参数管理，功能更强大且免费使用。</p>
 
     For more see <a href="https://github.com/newhoo/jvm-parameter-intellij-plugin">Document</a>
     <br/>
@@ -15,41 +15,12 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        1.0.6
+        1.0.7
         <ul>
-            <li>fix exception in 2024.1</li>
-        </ul>
-
-        1.0.5
-        <ul>
-            <li>update ui.</li>
-            <li>support quick copy preview text when right-click.</li>
-        </ul>
-
-        1.0.4
-        <ul>
-            <li>fix bugs.</li>
-        </ul>
-
-        1.0.3
-        <ul>
-            <li>support setting global parameter.</li>
-        </ul>
-
-        1.0.2
-        <ul>
-            <li>support i18n.</li>
-            <li>optimize ui.</li>
-        </ul>
-
-        1.0.1
-        <ul>
-            <li>fix compatibility problems.</li>
-        </ul>
-
-        1.0.0
-        <ul>
-            <li>new plugin, just use it.</li>
+            <li>New: Export all items. It's recommended to migrate data to RestfulBox, which also supports running environment variables and jvm parameter management.</li>
+            <li>新增: 导出全部按钮，支持导出所有项。推荐迁移到 RestfulBox，同时支持运行环境变量和jvm参数管理。</li>
+            <br/>
+            <img src="https://raw.githubusercontent.com/newhoo/RestfulBox/main/doc/zh_CN/images/screenshot_72d3be32-8b46-4279-8d8d-27b202c748b1.png" />
         </ul>
       ]]>
     </change-notes>

@@ -1,5 +1,8 @@
 package io.github.newhoo.jvm.setting;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -92,6 +95,14 @@ public class SettingForm {
                                                                  EventQueue.invokeLater(() -> {
                                                                      TableUtil.removeSelectedItems(jbTable);
                                                                  });
+                                                             })
+                                                             .addExtraAction(new AnAction(() -> JvmParameterBundle.getMessage("jvm.export.msg"), AllIcons.ToolbarDecorator.Export) {
+                                                                 @Override
+                                                                 public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
+                                                                     Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
+                                                                     String json = gson.toJson(dataModel.list);
+                                                                     CopyPasteManager.getInstance().setContents(new StringSelection(json));
+                                                                 }
                                                              });
         decorationPanel.add(decorationToolbar.createPanel(), BorderLayout.CENTER);
     }
