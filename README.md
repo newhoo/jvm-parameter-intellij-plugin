@@ -1,5 +1,7 @@
 # jvm-parameter-intellij-plugin
 
+_**State: The idea plugin has been migrated to the [RestfulBox](https://plugins.jetbrains.com/plugin/14723-restfulbox) plugin.**_
+
 [简体中文](./README.zh_CN.md)
 
 Manage jvm run parameter for your app conveniently. Enabled jvm parameters will be added to application run option when running.
@@ -32,14 +34,3 @@ After installed this plugin, you can add custom parameter in `Jvm Parameter` set
 | GLOBAL | Is global parameter |
 
 - Generate jvm parameter: click `Preview` label to generate common parameter.
-
-## Contact & Feedback
-[Issues](https://github.com/newhoo/jvm-parameter-intellij-plugin/issues) | [Email](mailto:huzunrong@foxmail.com) | [Ratings & Previews](https://plugins.jetbrains.com/plugin/13204-jvm-parameter/reviews)
-
-> Note  
-> Please provide necessary information when you feedback: IDEA version, plugin version, exception content, recreation way(if can), desire, and etc.
-
-## Sponsor
-You can take me a cup of coffee as you want. Thanks!
-
-![](images/pay.png)
